@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fortinet FCP 7.6 Practice Exam (76 Questions)</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--accent:#2b6ef6;--ok:#2ecc71;--err:#e74c3c;--muted:#7a7f86}
+    *{box-sizing:border-box}
+    body{font-family:Inter,Segoe UI,Roboto,Arial; margin:0; background:var(--bg); color:#111}
+    .wrap{max-width:980px;margin:28px auto;padding:22px}
+    header{display:flex;align-items:center;gap:18px}
+    h1{margin:0;font-size:20px}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(15,20,30,0.06)}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer}
+    button.secondary{background:transparent;color:var(--accent);border:1px solid rgba(43,110,246,0.3);padding:9px 13px}
+    button:disabled{opacity:0.6;cursor:not-allowed}
+    .stats{display:flex;gap:15px;font-size:14px;color:var(--muted);margin-bottom:15px}
+    .stats .count{color:var(--accent);font-weight:600}
+    .opt{background:var(--bg);padding:12px 14px;border-radius:8px;cursor:pointer;margin-bottom:8px;transition:all 0.15s ease}
+    .opt:hover{background:rgba(0,0,0,0.05)}
+    .opt.selected{border:2px solid var(--accent);background:rgba(43,110,246,0.1);padding:10px 12px}
+    .opt.disabled{cursor:not-allowed;pointer-events:none}
+    .opt.correct{background:var(--ok);color:#fff!important;border:2px solid var(--ok);font-weight:600}
+    .opt.wrong{background:var(--err);color:#fff!important;border:2px solid var(--err);font-weight:600}
+    .opt .label{font-weight:600;margin-right:8px;display:inline-block;width:20px;text-align:center}
+    #question-content{font-size:18px;font-weight:500;margin-bottom:15px}
+    #explanation-box{margin-top:15px;padding:12px;border:1px solid #ddd;border-radius:8px;background:#f9f9f9;display:none}
+    #status-bar{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:10px}
+    .exam-mode-indicator{background:var(--err);color:#fff;padding:4px 8px;border-radius:4px}
+    .finished-screen{text-align:center;padding:50px 20px}
+    .finished-screen h2{color:var(--accent)}
+    .finished-screen p{font-size:16px;color:var(--muted)}
+    .history-card{margin-top:15px;padding:15px;border:1px solid #ccc;border-radius:8px;text-align:left}
+    .history-card h4{margin-top:0;color:var(--accent)}
+    .history-card ul{list-style:none;padding-left:0}
+    .history-card li{margin-bottom:5px;padding:5px;border-radius:4px}
+    .history-card .correct{background-color:var(--ok);color:white}
+    .history-card .wrong{background-color:var(--err);color:white}
+    .exhibit{max-width:100%;height:auto;margin-bottom:15px;border:1px solid #ccc;display:block}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Fortinet FCP 7.6 Practice Exam (Total: 76 Questões)</h1>
+      <span class="exam-mode-indicator" id="mode-indicator">Modo Revisão</span>
+    </header>
+
+    <div id="finished-screen" class="card" style="display:none;">
+      <div class="finished-screen">
+        <h2>Exame Concluído!</h2>
+        <p>Você respondeu a todas as <span id="total-questions-final"></span> questões.</p>
+        <p>Acertos: <strong style="color:var(--ok);" id="correct-final">0</strong></p>
+        <p>Erros: <strong style="color:var(--err);" id="wrong-final">0</strong></p>
+        <p>Porcentagem: <strong style="color:var(--accent);" id="percent-final">0%</strong></p>
+        <div id="history-section"></div>
+        <div class="controls"><button onclick="startExam(true)">Refazer Exame (Modo Exame)</button> <button onclick="startExam(false)">Refazer Exame (Modo Revisão)</button></div>
+      </div>
+    </div>
+
+    <section id="exam-card" class="card">
+      <div id="status-bar">
+        <div class="stats">
+          Questão <span class="count" id="current-question">1</span> de <span class="count" id="total-questions">76</span>
+        </div>
+        <div class="stats">
+          Acertos: <span class="count" id="score-span">0</span> |
+          Erros: <span class="count" id="wrong-span">0</span>
+        </div>
+      </div>
+
+      <div id="question-content">Carregando questão...</div>
+      <div id="options-list"></div>
+      <div id="explanation-box"></div>
+
+      <div class="controls">
+        <button id="next-button" onclick="evaluateAndNext()">Próxima (Selecionadas: <span id="selected-label">-</span>)</button>
+        <button id="shuffle-button" class="secondary" onclick="startExam(false)">Embaralhar &amp; Recomeçar</button>
+        <button id="clear-button" class="secondary" onclick="clearSelection()">Limpar Seleção</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const QUESTION_BANK = [
+  {
+    "id": 1,
+    "question": "An administrator wants to configure dead peer detection (DPD) on IPsec VPN for detecting dead tunnels. The requirement is that FortiGate sends DPD probes only when there is no inbound traffic. Which DPD mode on FortiGate meets this requirement? ( Choose one answer )",
+    "exhibit_files": [],
+    "choices": [
+      "Enable",
+      "On Idle",
+      "Disable",
+      "On Demand"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D. - On Demand: DPD probes area sent when there is no inbound traffic - On idle: DPD probe area sent when there is no traffic."
+  },
+  {
+    "id": 2,
+    "question": "Which two statements about equal-cost multi-path (ECMP) configuration on FortiGate are true? (Choose two answers).",
+    "exhibit_files": [],
+    "choices": [
+      "If SD-WAN is enabled, you control the load balancing algorithm with the parameter load-balance-mode.",
+      "If SD-WAN is disabled, you can configure the parameter v4-ecmp-mode to volume-based.",
+      "If SD-WAN is enabled, you can configure routes with unequal distance and priority values to be part of ECMP",
+      "If SD- WAN is disabled, you configure the load balancing algorithm in config system settings."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D."
+  },
+  {
+    "id": 3,
+    "question": "You have created a web filter profile named restrict_media-profile with a daily category usage quota. When you are adding the profile to the firewall policy, the restrict_media-profile is not listed in the available web profile drop down. What could be the reason? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "The firewall policy is in no-inspection mode instead of deep-inspection.",
+      "The inspection mode in the firewall policy is not matching with web filter profile feature set.",
+      "The web filter profile is already referenced in another firewall policy.",
+      "The naming convention used in the web filter profile is restricting it in the firewall policy"
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 4,
+    "question": "Refer to the exhibit, As an administrator you have created an IPS profile, but it is not performing as expected. While testing you got the output as shown in the exhibit.",
+    "exhibit_files": [
+      "imagens/img_0001.jpeg",
+      "imagens/img_0002.jpeg"
+    ],
+    "choices": [
+      "There is no firewall policy configured with an IPS security profile.",
+      "FortiGate entered into IPS fail open state.",
+      "Administrator entered the command diagnose test application ipsmonitor 5.",
+      "Administrator entered the command diagnose test application ipsmonitor 99."
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A. What could be the possible reason of the diagnose output shown in the exhibit? (Choose one Answer) Fortinet’s IPS engine spawns child processes only when the IPS service is actively used. The engine‑count parameter reports the number of IPS engine processes currently running (fortinetweb.s3.amazonaws.com) A value of 0 means no engines are running. Using ipsmonitor 5 toggles IPS bypass mode and does not stop all engines (blog.boll.ch) Therefore neither option C nor D explains why there are zero engines. The only plausible reason is that there are no firewall policies referencing an IPS profile, so the IPS engine is never spawned and the engine count remains zero."
+  },
+  {
+    "id": 5,
+    "question": "Refer to the exhibit. The predefined deep-inspection and custom-deep-inspection profiles exclude some web categories from SSL inspection, as shown in the exhibit. For which two reasons are these web categories exempted? (Choose wot Answer)",
+    "exhibit_files": [
+      "imagens/img_0003.jpeg"
+    ],
+    "choices": [
+      "The FortiGate temporary certificate denies the browser's access to websites that use HTTP Strict Transport Security.",
+      "These websites are in an allowlist of reputable domain names maintained by FortiGuard.",
+      "The resources utilization is optimized because these websites are in the trusted domain list on FortiGate.",
+      "The legal regulation aims to prioritize user privacy and protect sensitive information for these websites."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D. The correct answer is A & D as Explained in FortiGate 7.6 Administrator Study Guide, Page 205."
+  },
+  {
+    "id": 6,
+    "question": "Refer to the exhibit. The NOC team connects to the FortiGate GUI with the NOC_Access admin profile. They request that their GUI sessions do not disconnect too early during inactivity. What must the administrator configure to answer this specific request from the NOC team? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0004.jpeg"
+    ],
+    "choices": [
+      "Move NOC_Access to the top of the list to ensure all profile settings take effect.",
+      "Increase the offline value of the Override Idle Timeout parameter in the NOC_Access admin profile.",
+      "Ensure that all NOC_Access users are assigned the super_admin role to guarantee access.",
+      "Increase the admintimeout value under config system accprofile NOC_Access."
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 7,
+    "question": "Refer to the exhibit, Based on this partial configuration, what are the two possible outcomes when FortiGate enters conserve mode? (Choose two answer).",
+    "exhibit_files": [
+      "imagens/img_0005.jpeg"
+    ],
+    "choices": [
+      "Administrators cannot change the configuration.",
+      "FortiGate skips quarantine actions.",
+      "Administrators must restart FortiGate to allow new sessions.",
+      "FortiGate drops new sessions requiring inspection."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "explanation": "Gabarito Original: A, B."
+  },
+  {
+    "id": 8,
+    "question": "What is the primary FortiGate election process when the HA override setting is enabled? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Connected monitored ports > Priority > HA uptime > FortiGate serial number",
+      "Connected monitored ports > Priority > System uptime > FortiGate serial number",
+      "Connected monitored ports > HA uptime > Priority > FortiGate serial number",
+      "Connected monitored ports > System uptime > Priority > FortiGate serial number"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 9,
+    "question": "An administrator wanted to configure an IPS sensor to block traffic that triggers a signature a set number of times during a specific time period. How can the administrator achieve the objective? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Use IPS group signatures, set rate-mode 60.",
+      "Use IPS packet logging option with periodical filter option.",
+      "Use IPS filter, rate-mode periodical option.",
+      "Use IPS signatures, rate-mode periodical option."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 10,
+    "question": "A FortiGate firewall policy is configured with active authentication, however, the user cannot authenticate when accessing a website. Which protocol must FortiGate allow even though the user cannot authenticate? (Choose one Anser)",
+    "exhibit_files": [],
+    "choices": [
+      "LDAP",
+      "TACACS+",
+      "Kerberos",
+      "DNS"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 11,
+    "question": "Refer to the exhibit, which shows a partial configuration from the remote authentication server. Why does the FortiGate administrator need this configuration?",
+    "exhibit_files": [
+      "imagens/img_0006.jpeg"
+    ],
+    "choices": [
+      "To authenticate only the Training user group.",
+      "To set up a RADIUS server Secret.",
+      "To authenticate and match the Training OU on the RADIUS server.",
+      "To authenticate Any FortiGate user groups"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 12,
+    "question": "Refer to the exhibit, which shows an SD-WAN zone configuration on the FortiGate GUI. Based on the exhibit, which statement is true? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0007.jpeg"
+    ],
+    "choices": [
+      "The Underlay zone is the zone by default.",
+      "The Underlay zone contains no member.",
+      "port2 and port3 are not assigned to a zone.",
+      "The virtual-wan-link and overlay zones can be deleted."
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 13,
+    "question": "Which three statements explain a flow-based antivirus profile? (Choose Three Answers)",
+    "exhibit_files": [],
+    "choices": [
+      "FortiGate buffers the whole file but transmits to the client at the same time.",
+      "Flow-based inspection uses a hybrid of the scanning modes available in proxy-based inspection.",
+      "If a virus is detected, the last packet is delivered to the client.",
+      "Flow-based inspection optimizes performance compared to proxy- based inspection.",
+      "The IPS engine handles the process as a standalone."
+    ],
+    "answer": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: A, B, D."
+  },
+  {
+    "id": 14,
+    "question": "Refer to the exhibit. An administrator has configured an Application Overrides for the ABC.Com application signature and set the Action to Allow. This application control profile is then applied to a firewall policy that is scanning all outbound traffic. Logging is enabled in the firewall policy. To test the configuration, the administrator accessed the ABC.Com web site several times. Why are there no logs generated under security logs for ABC.Com? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0008.jpeg"
+    ],
+    "choices": [
+      "The ABC.Com Type is set as Application instead of Filter.",
+      "The ABC.Com is configured under application profile, which must be configured as a web filter profile.",
+      "The ABC.Com Action is set to Allow.",
+      "The ABC.Com is hitting the category Excessive-Bandwidth."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 15,
+    "question": "Which two statements describe characteristics of automation stitches? (Choose two answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Actions involve only devices included in the Security Fabric.",
+      "An automation stitch can have multiple triggers.",
+      "Multiple actions can run in parallel.",
+      "Triggers can involve external connectors."
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "explanation": "Gabarito Original: C, D."
+  },
+  {
+    "id": 16,
+    "question": "Which three statements about SD-WAN performance SLAs are true? (Choose Three answers)",
+    "exhibit_files": [],
+    "choices": [
+      "They rely on session loss and jitter.",
+      "They can be measured actively or passively.",
+      "They are applied in a SD-WAN rule lowest cost strategy.",
+      "They monitor the state of the FortiGate device.",
+      "All the SLA targets can be configured."
+    ],
+    "answer": [
+      0,
+      1,
+      4
+    ],
+    "explanation": "Gabarito Original: A, B, E."
+  },
+  {
+    "id": 17,
+    "question": "Which two statements are true about an HA cluster? (Chhose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "An HA cluster cannot have both in-band and out-of-band management interfaces at the same time.",
+      "Link failover triggers a failover if the administrator sets the interface down on the primary device.",
+      "When sniffing the heartbeat interface, the administrator must see the IP address 169.254.0.2.",
+      "HA incremental synchronization includes FIB entries and IPsec SAs."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: B, D."
+  },
+  {
+    "id": 18,
+    "question": "A network administrator enabled antivirus and selected an SSL inspection profile on a firewall policy. When downloading an EICAR test file through HTTP, FortiGate detects the virus and blocks the file. When downloading the same file through HTTPS, FortiGate does not detect the virus and does not block the file, allowing it to be downloaded. The administrator confirms that the traffic matches the configured firewall policy. What are two reasons for the failed virus detection by FortiGate? (Choose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "The selected SSL inspection profile has certificate inspection enabled.",
+      "The website is exempted from SSL inspection.",
+      "The EICAR test file exceeds the protocol options oversize limit.",
+      "The browser does not trust the FortiGate self-signed CA certificate."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "explanation": "Gabarito Original: A, B."
+  },
+  {
+    "id": 19,
+    "question": "You have configured the below commands on a FortiGate. What would be the impact of this configuration on FortiGate? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0009.png"
+    ],
+    "choices": [
+      "FortiGate will enable strict RPF on all its interfaces and port1 will be enable for asymmetric routing.",
+      "FortiGate will enable strict RPF on all its interfaces and port1 will be exempted from RPF checks.",
+      "Port1 will be enabled with flexible RPF, and all other interfaces will be enabled for strict RPF.",
+      "The global configuration will take precedence and FortiGate will enable strict RPF on all interfaces."
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 20,
+    "question": "Refer to the exhibit. What would be the impact of these settings on the Server certificate SNI check configuration on FortiGate? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0010.jpeg"
+    ],
+    "choices": [
+      "FortiGate will accept and use the CN in the server certificate for URL filtering if the SNI does not match the CN or SAN fields.",
+      "FortiGate will accept the connection with a warning if the SNI does not match the CN or SAN fields.",
+      "FortiGate will close the connection if the SNI does not match the CN or SAN fields.",
+      "FortiGate will close the connection if the SNI does not match the CN and SAN fields."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 21,
+    "question": "A new administrator is configuring FSSO authentication on FortiGate using DC Agent Mode. Which step is NOT part of the expected process? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "The DC agent sends login event data directly to FortiGate.",
+      "The user logs into the windows domain.",
+      "The collector agent forwards login event data to FortiGate.",
+      "FortiGate determines user identity based on the IP address in the FSSO list."
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 22,
+    "question": "A network administrator is reviewing firewall policies in both Interface Pair View and By Sequence View. The policies appear in a different order in each view. Why is the policy order different in these two views? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Policies in Interface Pair View are prioritized by security levels, while By Sequence View strictly follows the administrator's manual ordering.",
+      "By Sequence View groups policies based on rule priority, while Interface Pair View always follows the order of traffic logs.",
+      "The firewall dynamically reorders policies in Interface Pair View based on recent traffic patterns, but By Sequence View remains static.",
+      "Interface Pair View sorts policies based on matching interfaces, while By Sequence View shows the actual processing order of rules."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 23,
+    "question": "An administrator notices that some users are unable to establish SSL VPN connections, while others can connect without any issues. What should the administrator check first? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Ensure that the affected users are using the correct port number",
+      "Ensure that user traffic is hitting the firewall policy",
+      "Ensure that forced tunneling is enabled to reroute all traffic through the SSL VPN",
+      "Ensure that the HTTPS service is enabled on SSL VPN tunnel interface"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 24,
+    "question": "Refer to the exhibit. An administrator has created a new firewall address to use as the destination for a static route. Why is the administrator not able to select the new address in the Destination field of the new static route? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0011.jpeg"
+    ],
+    "choices": [
+      "In the new static route, the administrator must select Named Address.",
+      "In the new firewall address, the FQDN address must first be resolved.",
+      "In the new static route, the administrator must first set the interface to port2.",
+      "In the new firewall address, Routing configuration must be enabled."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 25,
+    "question": "FortiGate is operating in NAT mode and has two physical interfaces connected to the LAN and DMZ networks respectively. Which two statements about the requirements of connected physical interfaces on FortiGate are true? (Choose two Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Both interfaces must have the interface role assigned.",
+      "Both interfaces must have directly connected routes on the routing table.",
+      "Both interfaces must have DHCP enabled and interfaces set to LAN and DMZ roles assigned",
+      "Both interfaces must have IP addresses assigned."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: B, D."
+  },
+  {
+    "id": 26,
+    "question": "When configuring a FortiGate in a multi-WAN setup, why would an administrator enable session preservation on an interface? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "To allow the FortiGate to dynamically change interfaces for all active sessions when a WAN link fails",
+      "To make sure all sessions without source NAT enabled always use the primary WAN link",
+      "To improve security by forcing users to authenticate again when the WAN link changes",
+      "To ensure that existing SSL VPN connections remain on the same interface even if route changes occur"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 27,
+    "question": "Refer to the exhibit. FortiGate has two separate firewall policies for Sales and Engineering to access the same web server with the same security profiles. Which action must the administrator perform to consolidate the two policies into one? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0012.jpeg"
+    ],
+    "choices": [
+      "Create an Aggregate interface that includes port1 and port2 to create a single firewall policy",
+      "Select port1 and port2 subnets in a single firewall policy.",
+      "Replace port1 and port2 with the any interface in a single firewall policy..",
+      "Enable Multiple Interface Policies to select port1 and port2 in the same firewall policy."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 28,
+    "question": "You have configured an application control profile, set peer-to-peer traffic to Block under the Categories tab, and applied it to the firewall policy. However, your peer-to-peer traffic on known ports is passing through the FortiGate without being blocked. What FortiGate settings should you check to resolve this issue? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "FortiGuard category ratings",
+      "Application and Filter Overrides",
+      "Network Protocol Enforcement",
+      "Replacement Messages for UDP-based Applications"
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 29,
+    "question": "When configuring firewall policies which of the following is true regarding the policy ID? (Choose two answer)",
+    "exhibit_files": [],
+    "choices": [
+      "It is mandatory to provide a policy ID while creating a firewall policy regardless of GUI or CLI.",
+      "A firewall policy ID identifies the order of policy execution in firewall policies.",
+      "You can create a policy in CLI with policy ID 0.",
+      "A policy ID cannot be edited once a policy is created."
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "explanation": "Gabarito Original: C, D."
+  },
+  {
+    "id": 30,
+    "question": "Which two statements are correct when FortiGate enters conserve mode? (Choose two Answers)",
+    "exhibit_files": [],
+    "choices": [
+      "FortiGate continues to run critical security actions, such as quarantine.",
+      "FortiGate refuses to accept configuration changes.",
+      "FortiGate halts complete system operation and requires a reboot to regain available resources.",
+      "FortiGate continues to transmit packets without IPS inspection when the fail-open global setting in IPS is enabled."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: B, D."
+  },
+  {
+    "id": 31,
+    "question": "A remote user reports slow SSL VPN performance and frequent disconnections. The user is located in an area with poor internet connectivity. What setting should the administrator adjust to improve the user’s experience? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Enable split tunneling to reduce VPN traffic.",
+      "Change the SSL VPN port to a non-standard port.",
+      "Increase the session timeout for inactive sessions.",
+      "Configure the DTLS timeout to accommodate high-latency connections."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 32,
+    "question": "An administrator wants to analyze and manage digital certificates to prevent browser warnings when users connect to the SSL VPN portal. Which two statements describe how to correctly do this? (Choose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "The administrator can rely on the default FortiGate self-signed certificate to prevent all security warnings in the browser.",
+      "The administrator must disable HTTPS administrative access entirely to avoid certificate warnings",
+      "The administrator can use a publicly trusted certificate from a known certificate authority (CA) to stop browser warnings",
+      "The administrator can import the FortiGate self-signed certificate into each user’s browser as a trusted certificate."
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "explanation": "Gabarito Original: C, D."
+  },
+  {
+    "id": 33,
+    "question": "An administrator suspects that the Collector Agent is not forwarding login events to FortiGate. What is the most effective troubleshooting step? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Verify if DC agent is enabled on the FortiGate",
+      "Restart the domain controller to refresh authentication services.",
+      "Verify if FortiGate is set to use LDAP authentication instead of FSSO.",
+      "Check if TCP port 8000 is open between the collector agent and FortiGate."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 34,
+    "question": "Refer to the exhibit. A network administrator is troubleshooting an IPsec tunnel between two FortiGate devices. The administrator has determined that phase 1 status is up, but phase 2 fails to come up. Based on the phase 2 configuration shown in the exhibit, which two configuration changes will bring phase 2 up? (Choose toe answers)",
+    "exhibit_files": [
+      "imagens/img_0013.jpeg",
+      "imagens/img_0014.jpeg"
+    ],
+    "choices": [
+      "On BR1-FGT, set Seconds to 43200.",
+      "On HQ-NGFW, enable Diffie-Hellman Group 2.",
+      "On BR1-FGT, set Remote Address to 10.0.11.0/255.255.255.0.",
+      "On HQ-NGFW, set Encryption to AES256."
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "explanation": "Gabarito Original: C, D."
+  },
+  {
+    "id": 35,
+    "question": "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, as well as the firewall policy and IP pool configuration on the FortiGate device. Two PCs, PC1 and PC2, are connected behind FortiGate and can access the internet successfully. However, when the administrator adds a third PC to the network (PC3), the PC cannot connect to the internet. Based on the information shown in the exhibit, which two configuration options can the administrator use to fix the connectivity issue for PC3? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0015.jpeg",
+      "imagens/img_0016.jpeg"
+    ],
+    "choices": [
+      "In the system settings, set Multiple Interface Policies to enable.",
+      "In the IP pool configuration, set endip to 100.65.0.112.",
+      "In the firewall policy, set match-vip to enable using CLI",
+      "In the IP pool configuration, set type to overload"
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: B, D."
+  },
+  {
+    "id": 36,
+    "question": "Refer to the exhibits. An administrator has observed the performance status outputs on an HA cluster for 55 seconds. Which FortiGate is the primary? (Choose one answer)",
+    "exhibit_files": [
+      "imagens/img_0017.png",
+      "imagens/img_0018.jpeg"
+    ],
+    "choices": [
+      "HQ-NGFW-2 with the parameter memory-failover-threshold setting",
+      "HQ-NGFW-2 with the parameter priority setting",
+      "HQ-NGFW-1 with the parameter memory-failover-flip-timeout setting",
+      "HQ-NGFW-1 with the parameter override setting"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 37,
+    "question": "Which statement correctly describes NetAPI polling mode for the FSSO collector agent? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "The collector agent uses a Windows API to query DCs for user logins.",
+      "NetAPI polling can increase bandwidth usage in large networks",
+      "The NetSessionEnum function is used to track user logouts.",
+      "The collector agent must search Windows application event logs."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 38,
+    "question": "You have configured the FortiGate device for FSSO. A user is successful in log-in to Windows, but their access to the internet is denied. What should the administrator check first? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Whether the user is assigned to the correct AD group.",
+      "The FortiGate firewall policy settings for SSL decryption",
+      "The FortiGate FSSO active users list for user's IP address.",
+      "The Windows event viewer for failed login attempts."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 39,
+    "question": "What are three key routing principles in SD-WAN? (Choose three answers)",
+    "exhibit_files": [],
+    "choices": [
+      "By default, SD-WAN rules are skipped if the included SD-WAN members do not have a valid route to the destination.",
+      "SD-WAN rules have precedence over any other type of routes.",
+      "Regular policy routes have precedence over SD-WAN rules.",
+      "By default, SD-WAN rules are skipped if only one route to the destination is available.",
+      "By default, SD-WAN rules are skipped if the best route to the destination is not an SD-WAN member."
+    ],
+    "answer": [
+      0,
+      2,
+      4
+    ],
+    "explanation": "Gabarito Original: A, C, E."
+  },
+  {
+    "id": 40,
+    "question": "Refer to the exhibits An administrator configured the Web Filter Profile to block access to all social networking sites except Facebook. However, when users try to access facebook.com, they are redirected to a FortiGuard web filtering block page. Based on the exhibits, which configuration change must the administrator make to allow Facebook while blocking all other social networking sites? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0019.jpeg"
+    ],
+    "choices": [
+      "Change the Feature set of Web Filter Profile as Proxy-based.",
+      "Change the type as Simple in the Static URL Filter section.",
+      "Set the Action as Exempt for [www.facebook.com](http://www.facebook.com/) in the Static URL Filter.",
+      "Set the Social Networking action as warning in the FortiGuard Category Based Filter."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 41,
+    "question": "Refer to the exhibit. You are asked to implement an antivirus profile for files downloaded through FTP, HTTP, and HTTPS. While testing, you are successful with HTTP and FTP protocols, but FortiGate does not block the file download over HTTPS. What could be the cause? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0020.jpeg"
+    ],
+    "choices": [
+      "Web filter is not enabled on the firewall policy to complement the antivirus profile.",
+      "The feature set in the antivirus profile is not set to Flow-based.",
+      "The SSL inspection mode in the firewall policy is not deep content inspection.",
+      "The action on the firewall policy is not set to deny."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 42,
+    "question": "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, as well as the IP pool configuration and firewall policy objects. The WAN (port2) interface has the IP address 100.65.0.101/24. The LAN (port4) interface has the IP address 10.0.11.254/24. Which IP address will be used to source NAT (SNAT) the traffic, if the user on HQ-PC- 1(10.0.11.50) pings the IP address of BR-FGT (100.65.1.111)? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0017.png",
+      "imagens/img_0021.jpeg"
+    ],
+    "choices": [
+      "100.65.0.101",
+      "100.65.0.49",
+      "100.65.0.99",
+      "100.65.0.149"
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 43,
+    "question": "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, and the firewall configuration. An administrator created a Deny policy with default settings to deny Webserver access for Remote-User2. The policy should work such that Remote-User1 must be able to access the Webserver while preventing Remote-User2 from accessing the Webserver. Which additional configuration can the administrator add to a deny firewall policy, beyond the default behavior, to block Remote-User2 from accessing the Webserver? (Choose one Answeer)",
+    "exhibit_files": [
+      "imagens/img_0022.jpeg"
+    ],
+    "choices": [
+      "Disable match-vip in the Allow_access policy.",
+      "Configure a One-to-One IP Pool object in a new policy",
+      "Set the Destination address as Webserver in the Deny policy.",
+      "Set the Destination address as Deny_IP in the Allow_access policy"
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 44,
+    "question": "Refer to the exhibits. The exhibits show the system performance output and default configuration of high memory usage thresholds on a FortiGate device. Based on the system performance output, what are the two possible outcomes? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0023.jpeg"
+    ],
+    "choices": [
+      "FortiGate has entered conserve mode.",
+      "Administrators can access FortiGate only through the console port.",
+      "Administrators can change the configuration.",
+      "FortiGate drops new sessions."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D."
+  },
+  {
+    "id": 49,
+    "question": "You have implemented the application sensor and the corresponding firewall policy as shown in the exhibits. You cannot access any of the Google applications, but you are able to access [www.fortinet.com.](http://www.fortinet.com/) Which two actions would you take to resolve the issue? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0024.jpeg",
+      "imagens/img_0025.jpeg"
+    ],
+    "choices": [
+      "Add *Google*.com to the URL category in the security profile.",
+      "Change the Inspection mode to Flow-based.",
+      "Set the action for Google in the Application and Filter Overrides section to Allow.",
+      "Move up Google in the Application and Filter Overrides section to set its priority to 1.",
+      "Set SSL inspection to deep-content inspection."
+    ],
+    "answer": [
+      1,
+      4
+    ],
+    "explanation": "Gabarito Original: B, E."
+  },
+  {
+    "id": 50,
+    "question": "Refer to the exhibits. You have implemented the application sensor and the corresponding firewall policy as shown in the exhibits. Which two factors can you observe from these configurations? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0017.png",
+      "imagens/img_0026.jpeg",
+      "imagens/img_0027.jpeg"
+    ],
+    "choices": [
+      "YouTube search is allowed based on the Google Application and Filter override settings.",
+      "Facebook access is allowed but you cannot play Facebook videos based on Video/Audio category filter settings",
+      "Facebook access is blocked based on the category filter settings.",
+      "YouTube access is blocked based on Excessive-Bandwidth Application and Filter override settings"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "explanation": "Gabarito Original: A, C."
+  },
+  {
+    "id": 51,
+    "question": "Refer to the exhibit, which contains a RADIUS server configuration. An administrator added a configuration for a new RADIUS server. While configuring, the administrator enabled Include in every user group. What is the impact of enabling Include in every user group in a RADIUS configuration? (Choose one answer)",
+    "exhibit_files": [
+      "imagens/img_0028.jpeg"
+    ],
+    "choices": [
+      "This option places the RADIUS server, and all users who can authenticate against that server, into every FortiGate user group.",
+      "This option places the RADIUS server, and all users who can authenticate against that server, into every RADIUS group",
+      "This option places all users into every RADIUS user group, including groups that are used for the LDAP server on FortiGate",
+      "This option places all FortiGate users and groups required to authenticate into the RADIUS server, which, in this case, is FortiAuthenticator"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 52,
+    "question": "Refer to the exhibits. An administrator creates a new address object on the root FortiGate (HQ-NGFW-1) in the Security Fabric. After synchronization, this object is not available on the downstream FortiGate (HQ-ISFW). What must the administrator do to synchronize the address object? (Choose one Answer).",
+    "exhibit_files": [
+      "imagens/img_0017.png",
+      "imagens/img_0029.jpeg"
+    ],
+    "choices": [
+      "Change the csf setting on HQ-ISFW (downstream) to set configuration- sync local.",
+      "Change the csf setting on HQ-ISFW (downstream) to set saml- configuration-sync default.",
+      "Change the csf setting on HQ-NGFW-1 (root) to set fabric-object- unification default.",
+      "Change the csf setting on both devices to set downstream-access enable."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 53,
+    "question": "Which three strategies are valid SD-WAN rule strategies for member selection? (Choose Three answers)",
+    "exhibit_files": [],
+    "choices": [
+      "Lowest Cost (SLA) without load balancing",
+      "Manual with load balancing",
+      "Lowest Quality (SLA) with load balancing",
+      "Lowest Cost (SLA) with load balancing",
+      "Best Quality with load balancing"
+    ],
+    "answer": [
+      1,
+      3,
+      4
+    ],
+    "explanation": "Gabarito Original: B, D, E."
+  },
+  {
+    "id": 54,
+    "question": "What are two characteristics of HA cluster heartbeat IP addresses in a Fortigate device? (Choose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "Heartbeat interfaces have virtual IP addresses that are manually assigned.",
+      "Heartbeat IP addresses are used to distinguish between cluster members.",
+      "The heartbeat interface of the primary device in the cluster is always assigned IP address 169.254.0.1.",
+      "A change in the heartbeat IP address happens when a FortiGate device joins or leaves the cluster."
+    ],
+    "answer": [
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: B, D."
+  },
+  {
+    "id": 55,
+    "question": "Refer to the exhibit showing a debug flow output. Which two conclusions can you make from the debug flow output? (choose two answer)",
+    "exhibit_files": [
+      "imagens/img_0030.jpeg"
+    ],
+    "choices": [
+      "The default gateway is configured on port2.",
+      "The RPF check fails.",
+      "The debug flow is for UDP traffic.",
+      "The matching firewall policy denies the traffic."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D."
+  },
+  {
+    "id": 56,
+    "question": "When FortiGate performs SSL/SSH full inspection, you can decide how it should react when it detects an invalid certificate. Which three actions are valid actions that FortiGate can perform when it detects an invalid certificate? (Choose three answers)",
+    "exhibit_files": [],
+    "choices": [
+      "Allow",
+      "Trust & Allow",
+      "Allow & Warning",
+      "Block",
+      "Block & Warning"
+    ],
+    "answer": [
+      0,
+      1,
+      3
+    ],
+    "explanation": "Gabarito Original: A, B, D."
+  },
+  {
+    "id": 57,
+    "question": "You want to ensure that an SSL VPN user's authenticated session does not remain active after they disconnect from the VPN. Which configuration will ensure this? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Configure the firewall authentication session timeout to be lower than the SSL VPN session timeout.",
+      "Manually clear active firewall authentication sessions after a user disconnects.",
+      "Increase the SSL VPN idle timeout to reduce the chance of early disconnections.",
+      "Enable settings to force the firewall authentication session to end when the SSL VPN session ends."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 58,
+    "question": "Refer to the exhibit, which shows a firewall policy to enable active authentication. When attempting to access an external website using an active authentication method, the user is not presented with a login prompt. What is the most likely reason for this situation?",
+    "exhibit_files": [
+      "imagens/img_0031.jpeg"
+    ],
+    "choices": [
+      "The Service DNS is required in the firewall policy.",
+      "The Remote-users group must be set up correctly in the FSSO configuration.",
+      "No matching user account exists for this user.",
+      "The Remote-users group is not added to the Destination."
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 59,
+    "question": "Refer to the exhibit. Why did the FortiGate device drop the packet? (Choose one answer)",
+    "exhibit_files": [
+      "imagens/img_0032.jpeg"
+    ],
+    "choices": [
+      "It matched the default implicit firewall policy.",
+      "It matched an explicitly configured firewall policy with the action DENY.",
+      "It cannot reach the next-hop IP.",
+      "It failed the RPF check."
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 60,
+    "question": "Refer to the exhibit, which shows a routing table. An administrator wants to create a new static route so the traffic to the subnet 172.20.1.0/24 is routed through port2 only. What are the two criteria that the administrator can use to achieve this objective? (Choose two answer)",
+    "exhibit_files": [
+      "imagens/img_0033.jpeg"
+    ],
+    "choices": [
+      "The new static route must have the distance set to 9.",
+      "The existing static route through port3 must have the distance set to 11.",
+      "The new static route must have the priority set to 3.",
+      "The new static route must have the metric set to 1."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "explanation": "Gabarito Original: A, B."
+  },
+  {
+    "id": 61,
+    "question": "Refer to the exhibit. Why is the Antivirus scan switch grayed out when you are creating a new antivirus profile for FTP? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0034.jpeg"
+    ],
+    "choices": [
+      "None of the inspected protocols are active in this profile.",
+      "FortiGate, with less than 2 GB RAM, does not support the Antivirus scan feature.",
+      "Antivirus scan is disabled under System -> Feature visibility.",
+      "The Feature Set for the profile is Flow-based but it must be Proxy-based."
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 62,
+    "question": "An administrator has configured a dialup IPsec VPN on FortiGate with add-route enabled. However, the static route is not showing in the routing table. Which two statements about this scenario are correct? (Choose two answer)",
+    "exhibit_files": [],
+    "choices": [
+      "The administrator must enable a dynamic routing protocol on the dialup interface.",
+      "The administrator must use a policy route instead of a static route for add- route to work properly.",
+      "The administrator must ensure phase 2 is successfully established.",
+      "The administrator must define the remote network correctly in the phase 2 selectors."
+    ],
+    "answer": [
+      2,
+      3
+    ],
+    "explanation": "Gabarito Original: C, D."
+  },
+  {
+    "id": 63,
+    "question": "An administrator configured a FortiGate device to act as a collector for agentless polling mode. What must the administrator add to the FortiGate device to retrieve AD user group information? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "TACACS Server",
+      "LDAP Server",
+      "RADIUS Server",
+      "Keycloak Server"
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 64,
+    "question": "What are two features of FortiGate FSSO agentless polling mode? (Choose two Answers)",
+    "exhibit_files": [],
+    "choices": [
+      "FortiGate directs the collector agent to use a remote LDAP server.",
+      "FortiGate uses the SMB protocol to read the event viewer logs from the DCs.",
+      "FortiGate does not support workstation check.",
+      "FortiGate uses the AD server as the collector agent."
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "explanation": "Gabarito Original: B, C."
+  },
+  {
+    "id": 65,
+    "question": "A network administrator has enabled full SSL inspection and web filtering on FortiGate. When visiting any HTTPS websites, the browser reports certificate warning errors. When visiting HTTP websites, the browser does not report errors. What is the reason for the certificate warning errors? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "The matching firewall policy is set to proxy inspection mode.",
+      "The certificate used by FortiGate for SSL inspection does not contain the required certificate extensions.",
+      "The full SSL inspection feature does not have a valid license.",
+      "The browser does not trust the certificate used by FortiGate for SSL inspection."
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 67,
+    "question": "An administrator wants to form an HA cluster using the FGCP protocol. Which two requirements must the administrator ensure both members fulfill? (Choose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "They must have the same HA group ID.",
+      "They must have the heartbeat interfaces in the same subnet.",
+      "They must have the same number of configured VDOMs.",
+      "They must have the same hard drive configuration."
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D."
+  },
+  {
+    "id": 68,
+    "question": "FortiGate is integrated with FortiAnalyzer and FortiManager. When creating a firewall policy, which attribute must an administrator include to enhance functionality and enable log recording on FortiAnalyzer and FortiManager? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Policy ID",
+      "Log ID",
+      "Universally Unique Identifier",
+      "Sequence ID"
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C. As per study guide page: 44 When creating firerewall objects or policies, a UUID attribute is added so that logs can record these UUIDs and improve functionality when integrating with FortiManager or FortiAnalyzer."
+  },
+  {
+    "id": 69,
+    "question": "An administrator manages a FortiGate model that supports NTurbo. How does NTurbo acceleration enhance antivirus performance? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "For proxy-based inspection, NTurbo offloads traffic to the content processor.",
+      "For flow-based inspection, NTurbo establishes a dedicated data path to redirect traffic between the IPS engine andFortiGate ingress and egress interfaces.",
+      "For proxy-based inspection, NTurbo buffers the whole file and then sends it to the antivirus engine.",
+      "For flow-based inspection, NTurbo creates two inspection sessions on the FortiGate device."
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 70,
+    "question": "Refer to the exhibit. The administrator configured SD-WAN rules and set the FortiGate traffic log page to display SD-WAN-specific columns: SD-WAN Quality and SD-WAN Rule Name. FortiGate allows traffic according to policy ID 1 placed at the top. This is the policy that allows SD-WAN traffic. Despite these settings, the traffic logs do not show the name of the SD-WAN rule used to steer those traffic flows. What could be the reason? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0035.jpeg"
+    ],
+    "choices": [
+      "SD-WAN rule names do not appear immediately. The administrator must refresh the page.",
+      "There is no application control profile applied to the firewall policy.",
+      "FortiGate load balanced the traffic according to the implicit SD-WAN rule.",
+      "Destinations in the SD-WAN rules are configured for each application, but feature visibility is not enabled."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 71,
+    "question": "Refer to the exhibit. Review the intrusion prevention system (IPS) profile signature settings shown in the exhibit. What can you conclude about the signature when adding the [FTP.Login.Failed](ftp://ftp.login.failed/) signature to the IPS Sensor Profile? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0036.jpeg"
+    ],
+    "choices": [
+      "The signature setting includes a group of other signatures.",
+      "FortiGate stores a local copy of the packet that matches the signature.",
+      "FortiGate allows this low-severity signature packet and creates a log.",
+      "The signature setting uses a custom rating threshold."
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 72,
+    "question": "Refer to the exhibits. A diagram of a FortiGate device connected to the network VIP object and firewall policy configuration area shown. The WAN (port2) interface has the IP Address 100.65.0.101/24 The LAN (port4) interface has the IP Address 10.0.11.254/24 If the host 100.65.1.111 sends a TCP SYN packet on port 443 to 100.65.0.200, what will the source address, destination address, and destination port of the packet be at the time Fortigate forwards the packet to the destination? (Choose one answer)",
+    "exhibit_files": [
+      "imagens/img_0037.png",
+      "imagens/img_0038.jpeg",
+      "imagens/img_0039.png",
+      "imagens/img_0040.jpeg",
+      "imagens/img_0017.png"
+    ],
+    "choices": [
+      "10.0.11.254, 10.0.15.50, and 4443, respectively",
+      "100.65.1.111, 10.0.11.50, and 443, respectively",
+      "10.0.11.254, 100.65.0.200, and 443, respectively",
+      "100.65.1.111, 10.0.11.50, and 4443, respectively"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 73,
+    "question": "Refer to the exhibits. The exhibits show a diagram of a FortiGate device connected to the network, and the firewall policies, VIP, and IP pool configurations on the FortiGate device. The WAN (port2) interface has the IP Address 100.65.0.101/24 The LAN (port4) interface has the IP Address 10.0.11.254/24 The first firewall policy has NAT enabled using the IP pool. The second firewall policy is configured with a VIP as the destination address. Which IP address will be used to source NAT (SNAT) the internet traffic coming from a workstation with the IP address 10.0.11.50? (Choose one Answer)",
+    "exhibit_files": [
+      "imagens/img_0041.jpeg"
+    ],
+    "choices": [
+      "100.65.0.101",
+      "100.65.0.200",
+      "100.65.0.102",
+      "10.0.11.254"
+    ],
+    "answer": [
+      2
+    ],
+    "explanation": "Gabarito Original: C."
+  },
+  {
+    "id": 74,
+    "question": "Based on the routing table shown in the exhibit, which two statements are true? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0042.jpeg"
+    ],
+    "choices": [
+      "A packet with the source IP address 10.100.110.10 arriving on port3 is allowed if strict RPF is disabled.",
+      "A packet with the source IP address 10.100.110.10 arriving on port2 is allowed if strict RPF is enabled.",
+      "A packet with the source IP address 10.0.13.10 arriving on port2 is allowed if strict RPF is disabled",
+      "A packet with the source IP address 10.10.10.10 arriving on port2 is allowed if strict RPF is enabled"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "explanation": "Gabarito Original: B, C."
+  },
+  {
+    "id": 75,
+    "question": "An administrator configures FortiGuard servers as DNS servers on FortiGate using default settings. What is true about the DNS connection to a FortiGuard server? (Choose one Answer)",
+    "exhibit_files": [],
+    "choices": [
+      "It uses DNS over TLS",
+      "It uses DNS over HTTPs",
+      "It uses UDP 8888",
+      "It uses UDP 53"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  },
+  {
+    "id": 76,
+    "question": "Refer to the exhibits What are two features of collector agent advanced mode? (Choose two answers)",
+    "exhibit_files": [],
+    "choices": [
+      "Advanced mode supports nested or inherited groups",
+      "In advanced mode, security profiles can be applied only to user groups, not individual users",
+      "In advanced mode, FortiGate can be configured as an LDAP client and group filters can be configured on FortiGate.",
+      "Advanced mode uses the Windows convention—NetBios: Domain\\Username"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "explanation": "Gabarito Original: A, C."
+  },
+  {
+    "id": 77,
+    "question": "How can the administrator view the log messages shown in the exhibit? (Choose two answers)",
+    "exhibit_files": [
+      "imagens/img_0043.jpeg"
+    ],
+    "choices": [
+      "Filtering by UUID and Application Name in the log entry",
+      "By right clicking the implicit deny policy",
+      "through Fortigate CLI command: diagnose log test",
+      "through Security event log page"
+    ],
+    "answer": [
+      0,
+      3
+    ],
+    "explanation": "Gabarito Original: A, D."
+  },
+  {
+    "id": 78,
+    "question": "An administrato wants to address shadow IP visibility challenges and prevent users from sending sensitive files outside the organization without proper approval. Wich FortiSASE method should the administrator implement to achieve these goals? (Choose one answer)",
+    "exhibit_files": [],
+    "choices": [
+      "Secure SD-WAN access (SSD-WAN)",
+      "Secure private access (SPA)",
+      "Secure SaaS access (SSA)",
+      "Secure internet access (SIA)"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 79,
+    "question": "Refer to the exhibits You deployed a FortiGate Cloud-Native Firewall (CNF) in AWS for FortiGate CNF policy enforcement for EC2 instance traffic. Which path does the EC2 traffic take from the EC2 instance to the internet?",
+    "exhibit_files": [
+      "imagens/img_0044.jpeg"
+    ],
+    "choices": [
+      "EC2 instance → Internet gateway (IGW) → gateway load balance (GWLB) → FortiGate CNF → Internet",
+      "EC2 instance → GWBL endpoint (GWLBe) → FortiGate CNF → IGW → Internet",
+      "EC2 instance → FortiGate CNF → GWLB → GWLBe → IGW → Internet",
+      "EC2 instance → GWLBe → FortiGate CNF → GWLBe → Internet"
+    ],
+    "answer": [
+      3
+    ],
+    "explanation": "Gabarito Original: D."
+  },
+  {
+    "id": 80,
+    "question": "Refer to the exhibits You are configuring FortiAnalyzer on FortiGate. Which step must take to connect FortiAnalyzer to FortiGate?",
+    "exhibit_files": [
+      "imagens/img_0045.jpeg"
+    ],
+    "choices": [
+      "Verify the FortiAnalyzer serial number",
+      "Authorize FortiGate on FortiAnalyzer",
+      "Enable disk logging on FortiGate",
+      "Configure UDP port 514 on FortiGate"
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Gabarito Original: B."
+  },
+  {
+    "id": 81,
+    "question": "You are onboarding an agentless, secure web gateway (SWG) endpoint for secure internet access (SIA). What will happen to the user´s nonweb traffic?",
+    "exhibit_files": [],
+    "choices": [
+      "All the nonweb traffic will bypass FortiSASE",
+      "The endpoint will use split tunneling to refirect nonweb traffic to FortiSASE",
+      "FortiSASE will use Firewall as a Service (FWaaS) to redirect nonweb traffic",
+      "FortiSASE will use SWG to redirect nonweb traffic to FortiExtender"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Gabarito Original: A."
+  }
+];
+
+    const state = {
+      examQuestions: [], current: 0, correct: 0, wrong: 0,
+      bank: QUESTION_BANK, mode: 'review', answeredThis: false, history: []
+    };
+
+    const questionContent = document.getElementById('question-content');
+    const optionsList = document.getElementById('options-list');
+    const currentQuestionSpan = document.getElementById('current-question');
+    const totalQuestionsSpan = document.getElementById('total-questions');
+    const scoreSpan = document.getElementById('score-span');
+    const wrongSpan = document.getElementById('wrong-span');
+    const selectedLabel = document.getElementById('selected-label');
+    const explanationBox = document.getElementById('explanation-box');
+    const finishedScreen = document.getElementById('finished-screen');
+    const examCard = document.getElementById('exam-card');
+    const modeIndicator = document.getElementById('mode-indicator');
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function startExam(isExamMode) {
+      state.examQuestions = [...state.bank];
+      shuffleArray(state.examQuestions);
+      state.current = 0; state.correct = 0; state.wrong = 0;
+      state.answeredThis = false; state.history = [];
+      state.mode = isExamMode ? 'exam' : 'review';
+
+      modeIndicator.textContent = isExamMode ? 'Modo Exame' : 'Modo Revisão';
+      modeIndicator.style.backgroundColor = isExamMode ? 'var(--err)' : 'var(--accent)';
+
+      finishedScreen.style.display = 'none';
+      examCard.style.display = 'block';
+      totalQuestionsSpan.textContent = state.examQuestions.length;
+      scoreSpan.textContent = 0; wrongSpan.textContent = 0;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      if (state.current >= state.examQuestions.length) { showFinishedScreen(); return; }
+      const i = state.current;
+      const item = state.examQuestions[i];
+
+      currentQuestionSpan.textContent = i + 1;
+      optionsList.innerHTML = '';
+      explanationBox.style.display = 'none';
+      state.answeredThis = false;
+      selectedLabel.textContent = '-';
+
+      const exhibitHtml = (item.exhibit_files || []).map(f =>
+        `<img class="exhibit" src="${f}" alt="Exhibit da questão ${item.id}"/>`).join('');
+
+      questionContent.innerHTML = exhibitHtml +
+        `<div style="font-size:18px;font-weight:500;margin-bottom:15px;">(${i + 1}/${state.examQuestions.length}) ${item.question}</div>`;
+
+      item.choices.forEach((choice, idx) => {
+        const d = document.createElement('div');
+        d.classList.add('opt');
+        d.dataset.idx = idx;
+        const label = String.fromCharCode(65 + idx);
+        d.innerHTML = `<span class="label">${label}</span>${choice}`;
+        optionsList.appendChild(d);
+      });
+    }
+
+    function clearSelection() {
+      if (state.answeredThis) return;
+      Array.from(optionsList.children).forEach(el => el.classList.remove('selected'));
+      selectedLabel.textContent = '-';
+    }
+
+    function selectOption(idx) {
+      if (state.answeredThis) return;
+      const item = state.examQuestions[state.current];
+      const chosenEl = optionsList.children[idx];
+      const isMCMA = Array.isArray(item.answer) && item.answer.length > 1;
+
+      if (!isMCMA) {
+        Array.from(optionsList.children).forEach(el => el.classList.remove('selected'));
+        chosenEl.classList.add('selected');
+      } else {
+        chosenEl.classList.toggle('selected');
+      }
+      const sel = Array.from(optionsList.children)
+        .filter(el => el.classList.contains('selected'))
+        .map(el => String.fromCharCode(65 + parseInt(el.dataset.idx))).join(', ');
+      selectedLabel.textContent = sel || '-';
+    }
+
+    function evaluateAndNext() {
+      const item = state.examQuestions[state.current];
+      if (state.answeredThis) { goNext(); return; }
+
+      const chosenIndexes = Array.from(optionsList.children)
+        .filter(el => el.classList.contains('selected'))
+        .map(el => parseInt(el.dataset.idx));
+
+      if (chosenIndexes.length === 0) {
+        alert('Selecione pelo menos uma alternativa antes de continuar.');
+        return;
+      }
+      state.answeredThis = true;
+
+      const correctIndexes = Array.isArray(item.answer) ? item.answer : [item.answer];
+      const isCorrect = chosenIndexes.length === correctIndexes.length &&
+                        chosenIndexes.every(x => correctIndexes.includes(x));
+
+      Array.from(optionsList.children).forEach(el => {
+        el.classList.add('disabled');
+        const idx = parseInt(el.dataset.idx);
+        if (correctIndexes.includes(idx)) el.classList.add('correct');
+        if (chosenIndexes.includes(idx) && !correctIndexes.includes(idx)) el.classList.add('wrong');
+      });
+
+      if (isCorrect) state.correct++; else state.wrong++;
+
+      const correctLetters = correctIndexes.map(x => String.fromCharCode(65 + x)).join(', ');
+      explanationBox.style.display = 'block';
+      explanationBox.innerHTML = `<strong>Gabarito:</strong> ${correctLetters}<br/><strong>Explicação:</strong><br/>` + item.explanation;
+
+      state.history.push({
+        question: item.question, chosen: chosenIndexes, correct: correctIndexes,
+        choices: item.choices, explanation: item.explanation
+      });
+      scoreSpan.textContent = state.correct;
+      wrongSpan.textContent = state.wrong;
+    }
+
+    function goNext() { state.current++; renderQuestion(); }
+
+    function showFinishedScreen() {
+      examCard.style.display = 'none';
+      finishedScreen.style.display = 'block';
+      const total = state.examQuestions.length;
+      const percent = total > 0 ? Math.round((state.correct / total) * 100) : 0;
+      document.getElementById('total-questions-final').textContent = total;
+      document.getElementById('correct-final').textContent = state.correct;
+      document.getElementById('wrong-final').textContent = state.wrong;
+      document.getElementById('percent-final').textContent = `${percent}%`;
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const historySection = document.getElementById('history-section');
+      historySection.innerHTML = '<h3>Histórico de Respostas</h3>';
+      state.history.forEach((h, index) => {
+        const card = document.createElement('div');
+        card.className = 'history-card';
+
+        const q = document.createElement('h4');
+        q.innerHTML = `Questão ${index + 1}: ${h.question}`;
+        card.appendChild(q);
+
+        const correctLetters = h.correct.map(x => String.fromCharCode(65 + x)).join(', ');
+        const isCorrect = h.chosen.every(x => h.correct.includes(x)) && h.chosen.length === h.correct.length;
+        const result = document.createElement('p');
+        result.innerHTML = isCorrect
+          ? `<span style="color:var(--ok);font-weight:bold;">✅ Correto</span>`
+          : `<span style="color:var(--err);font-weight:bold;">❌ Incorreto</span>`;
+        card.appendChild(result);
+
+        const ul = document.createElement('ul');
+        h.choices.forEach((choice, idx) => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span style="font-weight:bold;">${String.fromCharCode(65 + idx)}:</span> ${choice}`;
+          if (h.correct.includes(idx)) li.classList.add('correct');
+          if (h.chosen.includes(idx) && !h.correct.includes(idx)) li.classList.add('wrong');
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+
+        const ex = document.createElement('div');
+        ex.innerHTML = `<p style="margin-top:10px;"><strong>Gabarito:</strong> ${correctLetters}</p><p><strong>Explicação:</strong> ${h.explanation}</p>`;
+        card.appendChild(ex);
+        historySection.appendChild(card);
+      });
+    }
+
+    optionsList.addEventListener('click', (e) => {
+      let t = e.target;
+      while (t && !t.classList.contains('opt')) t = t.parentNode;
+      if (t && t.classList.contains('opt')) selectOption(parseInt(t.dataset.idx));
+    });
+
+    window.addEventListener('load', () => startExam(false));
+  </script>
+</body>
+</html>
